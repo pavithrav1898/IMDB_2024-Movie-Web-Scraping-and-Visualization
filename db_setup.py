@@ -20,7 +20,7 @@ def create_IMDB_table():
                 genre VARCHAR(100),
                 rating FLOAT NULL,
                 vote_count INT NULL,
-                duration INT NULL   -- store in minutes (safer than TIME)
+                duration TIME NOT NULL   -- store in minutes (safer than TIME)
             )ENGINE=InnoDB ROW_FORMAT=DYNAMIC
         """)
 
@@ -31,10 +31,10 @@ def create_IMDB_table():
         data_tuples = [
             (
                 row.movie_name,
-                row.genre.title() if pd.notna(row.genre) else None,
+                row.genre.title(),
                 float(row.rating) if pd.notna(row.rating) else None,
                 int(row.vote_count) if pd.notna(row.vote_count) else None,
-                int(row.duration) if pd.notna(row.duration) else None
+                row.duration
             )
             for row in dataframe.itertuples(index=False)
         ]
@@ -53,3 +53,4 @@ def create_IMDB_table():
     finally:
         if cur: cur.close()
         if cnx: cnx.close()
+
